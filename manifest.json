@@ -1,0 +1,26 @@
+{
+	"name": "contextmenu-source",
+	"version": "0.1",
+	"manifest_version": 2,
+	"icons": {
+		"16": "logo.png",
+		"128": "logo.png"
+	},
+	"content_scripts" : [{
+		"matches": ["http://*/*"],
+		"js" : [
+			"/src/content_scripts.js"
+		]
+	}],
+	"background" : {
+		"persistent": false,
+		"scripts": [
+			"/src/background.js"
+		]
+	},
+	"permissions": [
+		"tabs",
+		"http://*/*",
+		"contextMenus"
+	]
+}
