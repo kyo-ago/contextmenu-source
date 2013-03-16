@@ -1,4 +1,7 @@
 chrome.extension.onMessage.addListener(function (msg) {
+	if (msg.command !== 'createContextMenu') {
+		return;
+	}
 	chrome.contextMenus.removeAll();
 	createMenus('Script', msg.scripts);
 	createMenus('CSS', msg.links);

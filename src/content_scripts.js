@@ -3,8 +3,15 @@ var getPaths = function (s, k) {
 		return elem[k];
 	});
 };
-chrome.extension.sendMessage({
-	'command' : 'loadElements',
-	'scripts' : getPaths('script[src]', 'src'),
-	'links' : getPaths('link[href][rel="stylesheet"]', 'href')
-});
+var loadScript = function () {
+	if (document.webkitHidden) {
+		return;
+	}
+	chrome.extension.sendMessage({
+		'command' : 'createContextMenu',
+		'scripts' : getPaths('script[src]', 'src'),
+		'links' : getPaths('link[href][rel="stylesheet"]', 'href')
+	});
+};
+document.addEventListener('webkitvisibilitychange', loadScript);
+loadScript();
