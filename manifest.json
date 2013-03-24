@@ -1,6 +1,6 @@
 {
 	"name": "contextmenu-source",
-	"version": "0.3",
+	"version": "0.4",
 	"manifest_version": 2,
 	"icons": {
 		"16": "logo.png",

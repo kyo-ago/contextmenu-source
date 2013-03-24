@@ -14,5 +14,12 @@ var loadScript = function () {
 		'domain' : location.host
 	});
 };
+var delayLoad = function () {
+	setTimeout(loadScript, 500);
+};
 document.addEventListener('webkitvisibilitychange', loadScript);
+window.addEventListener('load', delayLoad);
+if (document.readyState === 'complete') {
+	delayLoad();
+}
 loadScript();

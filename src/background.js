@@ -1,3 +1,6 @@
+chrome.tabs.onActivated.addListener(function () {
+	chrome.contextMenus.removeAll();
+});
 chrome.extension.onMessage.addListener(function (msg) {
 	if (msg.command !== 'createContextMenu') {
 		return;
@@ -7,6 +10,9 @@ chrome.extension.onMessage.addListener(function (msg) {
 	createMenus('CSS', msg.links, msg.domain);
 });
 chrome.contextMenus.onClicked.addListener(function(clickData) {
+	if (clickData.menuItemId.match(/^root:/)) {
+		return;
+	}
 	chrome.tabs.create({
 		'url' : clickData.menuItemId
 	});
@@ -20,10 +26,16 @@ function createMenus (type, urls, domain) {
 	});
 	var filter = {};
 	var map = {};
-	urls.filter(function (url) {
-		return filter[url] = ~~filter[url] + 1;
-	}).forEach(function (url) {
-		var loc = Location.parse(url);
+	urls.map(function (url) {
+		return Location.parse(url);
+	}).filter(function (loc) {
+		var path = loc.pathname
+			? loc.host + loc.pathname
+			: loc.href
+		;
+		filter[path] = ~~filter[path] + 1;
+		return filter[path] === 1;
+	}).forEach(function (loc) {
 		map[loc.host] = map[loc.host] || [];
 		map[loc.host].push(loc);
 	});
@@ -46,6 +58,8 @@ function createMenus (type, urls, domain) {
 function addContextmenu (parentId, urls) {
 	urls.forEach(function (url) {
 		var file = url.pathname.split('/').pop();
+		file = file || url.pathname;
+		file = file || url.host;
 		chrome.contextMenus.create({
 			'id' : url.href,
 			'title' : file,
