@@ -9,12 +9,27 @@ chrome.extension.onMessage.addListener(function (msg) {
 	createMenus('Script', msg.scripts, msg.domain);
 	createMenus('CSS', msg.links, msg.domain);
 });
+function createNewTab (url) {
+	var link = document.createElement('a');
+	link.href = url;
+	link.target = '_blank';
+	var evn = document.createEvent('MouseEvents');
+	evn.initEvent('click', false, true);
+	link.dispatchEvent(evn);
+}
 chrome.contextMenus.onClicked.addListener(function(clickData) {
 	if (clickData.menuItemId.match(/^root:/)) {
 		return;
 	}
-	chrome.tabs.create({
-		'url' : clickData.menuItemId
+	chrome.tabs.query({
+		'active' : true,
+		'currentWindow' : true
+	}, function (tabs) {
+		var code = createNewTab.toString();
+		var url = clickData.menuItemId;
+		chrome.tabs.executeScript(tabs[0].id, {
+			'code' : '(' + createNewTab + ')("' + url + '")'
+		});
 	});
 });
 function createMenus (type, urls, domain) {
