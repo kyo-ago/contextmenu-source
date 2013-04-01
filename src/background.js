@@ -32,11 +32,12 @@ chrome.contextMenus.onClicked.addListener(function(clickData) {
 		});
 	});
 });
+var contexts = ['page', 'frame', 'selection', 'link', 'image'];
 function createMenus (type, urls, domain) {
 	var type_id = 'root:' + type;
 	chrome.contextMenus.create({
 		'title' : type,
-		'contexts' : ['page'],
+		'contexts' : contexts,
 		'id' : type_id
 	});
 	var filter = {};
@@ -63,7 +64,7 @@ function createMenus (type, urls, domain) {
 		chrome.contextMenus.create({
 			'id' : domain_id,
 			'title' : domain,
-			'contexts' : ['page'],
+			'contexts' : contexts,
 			'enabled' : false,
 			'parentId' : type_id
 		});
@@ -78,7 +79,7 @@ function addContextmenu (parentId, urls) {
 		chrome.contextMenus.create({
 			'id' : url.href,
 			'title' : file,
-			'contexts' : ['page'],
+			'contexts' : contexts,
 			'parentId' : parentId
 		});
 	});
