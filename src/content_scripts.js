@@ -1,6 +1,8 @@
 var getPaths = function (s, k) {
 	return Array.prototype.map.call(document.querySelectorAll(s), function (elem) {
 		return elem[k];
+	}).filter(function (url) {
+		return !url.match(/^chrome-extension:\/\//);
 	});
 };
 var loadScript = function () {
